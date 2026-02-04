@@ -83,22 +83,23 @@ def get_daily_attendance(DAILY_ATTENDANCE_URL,access_token,student_df):
     df = pd.DataFrame(attendance)
     # df = map_teacher(df,teachers_dict=teachers_dict)
     df = map_student_grade(df,student_df=student_df)
+    df = df[df["grade_level"].isin(["Grade 9", "Grade 10","Grade 11", "Grade 12"])]
     print(df,"fdf")
     
     return df
 
 
 
-def map_student_grade(behavior,student_df):
+def map_student_grade(attendance,student_df):
     student_df = student_df.rename(columns={"id": "student_id_for_merge"})
 
-    behavior = behavior.merge(
+    attendance = attendance.merge(
         student_df[["student_id_for_merge", "grade_level"]],
         left_on="person_id",
         right_on="student_id_for_merge",
         how="left"
     )
-    behavior = behavior.drop(columns=["student_id_for_merge"])
+    attendance = attendance.drop(columns=["student_id_for_merge"])
 
 
-    return behavior
+    return attendance
