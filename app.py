@@ -12,7 +12,7 @@ from flask import Flask
 from datetime import datetime
 from behavior import get_behavior
 from assignments import get_assignments
-from daily_attendance import get_daily_attendance
+from daily_attendance import get_daily_attendance,get_daily_attendance_for_all_students
 from functions import get_access_token,get_all_teachers,get_students,get_hs_classes
 from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor
@@ -230,10 +230,27 @@ def main():
             f.result()
 
 
+
+def update_daily_attendance_all_students():
+    access_tokem = get_access_token(CLIENT_ID, CLIENT_SECRET, TOKEN_URL)
+    daily_attendance_df = get_daily_attendance_for_all_students(access_token=access_tokem,DAILY_ATTENDANCE_URL=DAILY_ATTENDANCE_URL)
+    if daily_attendance_df:
+        upload_to_google_sheets(daily_attendance_df,sheet_name="DailyAttendanceAll",clear_sheet=True)
+
+
 @app.route("/run")
 def run_job():
     try:
         main()  # call your existing main() function
+        return "✅ Student data uploaded successfully!", 200
+    except Exception as e:
+        return f"❌ Error: {e}", 500
+    
+
+@app.route("/daily_attendance")
+def run_job():
+    try:
+        update_daily_attendance_all_students()  # call your existing main() function
         return "✅ Student data uploaded successfully!", 200
     except Exception as e:
         return f"❌ Error: {e}", 500
