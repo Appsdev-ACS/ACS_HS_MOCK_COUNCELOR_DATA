@@ -248,7 +248,7 @@ def run_job():
     
 
 @app.route("/daily_attendance")
-def run_job():
+def daily_attendnace_student_safety():
     try:
         update_daily_attendance_all_students()  # call your existing main() function
         return "✅ Student data uploaded successfully!", 200
