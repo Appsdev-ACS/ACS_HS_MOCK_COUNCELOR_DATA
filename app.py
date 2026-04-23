@@ -234,7 +234,8 @@ def main():
 def update_daily_attendance_all_students():
     access_tokem = get_access_token(CLIENT_ID, CLIENT_SECRET, TOKEN_URL)
     daily_attendance_df = get_daily_attendance_for_all_students(access_token=access_tokem,DAILY_ATTENDANCE_URL=DAILY_ATTENDANCE_URL)
-    if daily_attendance_df:
+    print("git")
+    if not daily_attendance_df.empty:
         upload_to_google_sheets(daily_attendance_df,sheet_name="DailyAttendanceAll",clear_sheet=True)
 
 
